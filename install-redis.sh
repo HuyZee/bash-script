@@ -1,18 +1,20 @@
 #!/bin/bash
 set -e
 
-# Add Redis repository GPG key
+# Install prerequisites
+apt-get update
+apt-get install -y lsb-release curl gpg
+
+# Add Redis GPG key
 curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
 
 # Add Redis repository
 echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" \
   > /etc/apt/sources.list.d/redis.list
 
-# Update apt cache
+# Update package index
 apt-get update
 
-# Install Redis, Redis tools, and Redis Sentinel (specific version)
-apt-get install -y \
-  redis=6:8.0.2-1rl1~jammy1 \
-  redis-tools=6:8.0.2-1rl1~jammy1 \
-  redis-sentinel=6:8.0.2-1rl1~jammy1
+# Install Redis (latest available from repo)
+apt-get install -y redis
